@@ -98,5 +98,61 @@ preset stage-0 其实包含了 stage-[1-3] ，也就是说你装了 0 ，其他�
 - transform-do-expressions
 - transform-function-bind
 
+### babel转换工具 ###
 
+#### babel-cli ####
 
+命令行转码工具
+
+#### babel-register ####
+
+babel-register模块改写require命令，为它加上一个钩子。此后，每当使用require加载.js、.jsx、.es和.es6后缀名的文件，就会先用Babel进行转码。
+使用时，必须首先加载babel-register。
+
+```
+require("babel-register");
+require("./index.js");
+```
+
+然后，就不需要手动对index.js转码了。
+
+需要注意的是，babel-register只会对require命令加载的文件转码，而不会对当前文件转码。另外，由于它是实时转码，所以只适合在开发环境使用。
+
+#### bebel-core ####
+
+如果某些代码需要调用Babel的API进行转码，就要使用babel-core模块。
+
+```
+var babel = require('babel-core');
+
+// 字符串转码
+babel.transform('code();', options);
+// => { code, map, ast }
+
+// 文件转码（异步）
+babel.transformFile('filename.js', options, function(err, result) {
+  result; // => { code, map, ast }
+});
+
+// 文件转码（同步）
+babel.transformFileSync('filename.js', options);
+// => { code, map, ast }
+
+// Babel AST转码
+babel.transformFromAst(ast, code, options);
+// => { code, map, ast }
+```
+
+#### babel-polyfill ####
+
+Babel默认只转换新的JavaScript句法（syntax），而不转换新的API，比如Iterator、Generator、Set、Maps、Proxy、Reflect、Symbol、Promise等全局对象，以及一些定义在全局对象上的方法（比如Object.assign）都不会转码。
+
+举例来说，ES6在Array对象上新增了Array.from方法。Babel就不会转码这个方法。如果想让这个方法运行，必须使用babel-polyfill，为当前环境提供一个垫片。
+
+然后，在脚本头部，加入如下一行代码。
+
+```
+import 'babel-polyfill';
+// 或者
+require('babel-polyfill');
+```
