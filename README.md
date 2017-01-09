@@ -71,6 +71,32 @@ $ npm install --save-dev babel-preset-stage-3
   }
 ```
 
+### babel-preset-stage-* 差异: ###
+
+preset stage-0 其实包含了 stage-[1-3] ，也就是说你装了 0 ，其他三个默认就装了，别重复安装，因为它包含stage-1, stage-2以及stage-3的所有功能。另外，[0-3] 是代表了不同阶段，但， 0 是代表刚开始讨论，而 3 是代表快要成为标准规范了，切忌搞混。在进行实际开发时，可以更具需要来设置对应的stage。如果省事懒得折腾，一般设置为stage-0即可。如果为了防止开发人员使用某些太新的功能，我们可以限制到某个特定的stage。
+
+### 更详细、更专业一点的介绍： ###
+#### stage3包含以下两个插件： ####
+
+- transform-async-to-generator
+- transform-exponentiation-operator
+
+#### stage2包含stage3的所有插件，额外还有以下插件： ####
+
+- syntax-trailing-function-commas
+- transform-object-reset-spread
+
+#### stage1包含stage2所有插件，额外还有以下插件： ####
+
+- transform-class-constructor-call (Deprecated)
+- transform-class-properties
+- transform-decorators – disabled pending proposal update
+- transform-export-extensions
+
+#### stage0包含stage1所有插件，额外还有以下插件： ####
+
+- transform-do-expressions
+- transform-function-bind
 
 
 
