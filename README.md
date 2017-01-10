@@ -156,3 +156,80 @@ import 'babel-polyfill';
 // 或者
 require('babel-polyfill');
 ```
+
+### let和const ###
+ES6新增了let命令，用来声明变量。它的用法类似于var，但是所声明的变量，只在let命令所在的代码块内有效。
+
+#### let声明的变量不存在变量提升， ####
+```
+// var 的情况
+console.log(foo); // 输出undefined
+var foo = 2;
+
+// let 的情况
+console.log(bar); // 报错ReferenceError
+let bar = 2;
+```
+
+上面代码中，变量foo用var命令声明，会发生变量提升，即脚本开始运行时，变量foo已经存在了，但是没有值，所以会输出undefined。变量bar用let命令声明，不会发生变量提升。这表示在声明它之前，变量bar是不存在的，这时如果用到它，就会抛出一个错误。
+#### 暂时性死区 ####
+总之，在代码块内，使用let命令声明变量之前，该变量都是不可用的。这在语法上，称为“暂时性死区”（temporal dead zone，简称 TDZ）。
+ES6明确规定，如果区块中存在let和const命令，这个区块对这些命令声明的变量，从一开始就形成了封闭作用域。凡是在声明之前就使用这些变量，就会报错。
+#### let不允许在相同作用域内，重复声明同一个变量。 ####
+```
+// 报错
+function () {
+  let a = 10;
+  var a = 1;
+}
+
+// 报错
+function () {
+  let a = 10;
+  let a = 1;
+}
+
+function func(arg) {
+  let arg; // 报错
+}
+
+function func(arg) {
+  {
+    let arg; // 不报错
+  }
+}
+```
+
+#### 块级作用域 ####
+ES5只有全局作用域和函数作用域，没有块级作用域，这带来很多不合理的场景。
+第一种场景，内层变量可能会覆盖外层变量。
+```
+var tmp = new Date();
+
+function f() {
+  console.log(tmp);
+  if (false) {
+    var tmp = "hello world";
+  }
+}
+
+f(); // undefined
+```
+上面代码中，函数f执行后，输出结果为undefined，原因在于变量提升，导致内层的tmp变量覆盖了外层的tmp变量。
+
+第二种场景，用来计数的循环变量泄露为全局变量。
+```
+var s = 'hello';
+
+for (var i = 0; i < s.length; i++) {
+  console.log(s[i]);
+}
+
+console.log(i); // 5
+```
+上面代码中，变量i只用来控制循环，但是循环结束后，它并没有消失，泄露成了全局变量。
+#### const ####
+const声明一个只读的常量。一旦声明，常量的值就不能改变。
+const声明的变量不得改变值，这意味着，const一旦声明变量，就必须立即初始化，不能留到以后赋值。
+const的作用域与let命令相同：只在声明所在的块级作用域内有效。
+const声明的常量，也与let一样不可重复声明。
